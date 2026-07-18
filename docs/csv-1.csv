@@ -1,0 +1,28 @@
+Stage,Task,Subtask,Priority,Status,Start Date,End Date,Days Spent,Max Days Allowed,Project Link,Notes
+1,Python Fundamentals,"Variables, Data Types, Operators",High,Not Started,,,0,2,,Learn syntax only
+1,Python Fundamentals,"Conditions & Loops",High,Not Started,,,0,2,,if else for while
+1,Python Fundamentals,Functions,High,Not Started,,,0,2,,Parameters and Return values
+1,Python Fundamentals,"Lists, Tuples, Dictionaries, Sets",High,Not Started,,,0,2,,Most used collections
+1,Python Fundamentals,"String Manipulation",High,Not Started,,,0,1,,Important for parsing
+1,Python Fundamentals,"File Handling (TXT CSV JSON)",High,Not Started,,,0,2,,Save scraped data
+1,Python Fundamentals,"Exception Handling",High,Not Started,,,0,1,,try except finally
+1,Python Fundamentals,"Modules & Virtual Environment",Medium,Not Started,,,0,1,,pip and venv
+2,Intermediate Python,"OOP (Classes & Objects)",High,Not Started,,,0,2,,Build scalable apps
+2,Intermediate Python,"Dataclasses & Type Hints",Medium,Not Started,,,0,1,,Clean code
+2,Intermediate Python,"Requests Library",High,Not Started,,,0,1,,REST API calls
+2,Intermediate Python,"JSON Handling",High,Not Started,,,0,1,,API responses
+3,Web Scraping,BeautifulSoup,High,Not Started,,,0,2,Job Scraper,Parse HTML
+3,Web Scraping,Playwright,High,Not Started,,,0,3,Job Scraper,Dynamic websites
+3,Web Scraping,"asyncio & async/await",High,Not Started,,,0,2,Job Scraper,Faster scraping
+4,AI Development,"OpenAI SDK",High,Not Started,,,0,3,Resume Generator,LLM integration
+4,AI Development,"Prompt Engineering",High,Not Started,,,0,2,Resume Generator,Better prompts
+4,AI Development,Pydantic,Medium,Not Started,,,0,2,Resume Generator,Structured outputs
+5,Backend Development,"FastAPI Basics",High,Not Started,,,0,3,All Projects,REST APIs
+5,Backend Development,"File Upload APIs",High,Not Started,,,0,1,Resume Generator,Upload Resume and JD
+6,AI Agents,"LangChain Basics",Medium,Not Started,,,0,2,DevOps Agent,LLM pipelines
+6,AI Agents,"LangGraph Basics",High,Not Started,,,0,3,DevOps Agent,Stateful AI agents
+7,Project,"AI Remote Job Scraper",High,Not Started,,,0,5,GitHub Repo,End-to-end project
+7,Project,"ATS Resume Generator",High,Not Started,,,0,5,GitHub Repo,AI Resume Tool
+7,Project,"DevOps AI Agent",High,Not Started,,,0,5,GitHub Repo,AI Automation Assistant
+8,Deployment,"Dockerize Applications",High,Not Started,,,0,2,All Projects,Containerize apps
+8,Deployment,"Documentation & README",High,Not Started,,,0,2,GitHub Repo,Portfolio ready
