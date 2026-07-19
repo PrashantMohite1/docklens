@@ -3,6 +3,7 @@
 ## Contents
 
 - [Kernel, WSL & WSL2](./kernel-wsl-wsl2.md)
+- [Folder hashing — detect if a folder changed](./hashing-folder.md)
 - [Why Docker needs Linux](#why-docker-needs-linux)
   - [So how does Docker run on Windows? — A hidden Linux VM](#so-how-does-docker-run-on-windows--a-hidden-linux-vm)
 - [Image directory structure](#image-directory-structure)
