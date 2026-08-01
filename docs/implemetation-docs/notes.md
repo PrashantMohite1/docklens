@@ -34,5 +34,30 @@ docklens verify \
     --local ./myapp \
     --path /usr/local/bin/myapp
 
+
+
+## file hash Check 
+
 run sha256sum on host 
+sha256sum /app/temp.txt
+
 run sha256sum inside the container of image
+docker run --rm img-name sha256sum /app/temp.txt 
+
+## folder hash check 
+
+on host 
+```
+find releaseDir -type f -exec sha256sum {} + \
+| awk '{print $1}' \
+| sort \
+| sha256sum
+```
+
+on docker 
+```
+docker run --rm alpine-dir \
+sh -c 'find releaseDir -type f -exec sha256sum {} + | awk "{print \$1}" | sort | sha256sum'
+```
+
+
