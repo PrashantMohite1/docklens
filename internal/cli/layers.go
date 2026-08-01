@@ -5,18 +5,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var analyzeCmd = &cobra.Command{
-	Use:   "analyze",
-	Short: "Analyze a Docker image",
-	Args:  cobra.ExactArgs(1),
+var layercmd = &cobra.Command{
+	Use: "layers",
 
 	Run: func(cmd *cobra.Command, args []string) {
 		imageName := args[0]
-		analyzer.AnalyzeImage(imageName)
+		analyzer.Get_img_layer(imageName)
 
 	},
 }
 
 func init() {
-	imageCmd.AddCommand(analyzeCmd)
+	imageCmd.AddCommand(layercmd)
 }
