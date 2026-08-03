@@ -33,6 +33,7 @@ docklens verify \
 
 A) docker image verify image-name command-to-run
 B) docker image verify --local file.txt image-name:/app/file.txt
+c) docker image verify --local file.txt [img1,img2,img3] img-path /app/file.txt
 
 
 ## file hash Check 
