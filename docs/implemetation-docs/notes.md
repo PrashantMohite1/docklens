@@ -24,9 +24,6 @@ which means if unzip
 
 
 #### does file exist in image or not  ( THIS OPTION WILL NOT WORK FIND DIFFERENT )
-will give file as a input 
-then it create a same formate hash which we get in docker images layers 
-then will compare weather it is matching to one of the hash or not 
 
 
 docklens verify \
