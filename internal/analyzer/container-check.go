@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"time"
 
 	"github.com/moby/moby/api/types/container"
 	"github.com/moby/moby/client"
@@ -36,28 +37,26 @@ func Run_in_container(imageName string, imgpath string) {
 		Tty:          true,
 	}
 	creatopt := client.ContainerCreateOptions{
-		Name:   "c22",
 		Config: cfg,
 	}
-	createCont, err := apiClient.ContainerCreate(context.Background(), creatopt)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	createCont, err := apiClient.ContainerCreate(ctx, creatopt)
 
 	if err != nil {
 		fmt.Println("Error creating container: ", err)
-	} else {
-		fmt.Println("Container created successfully - container ID = ", createCont.ID)
 	}
 
-	fmt.Println("command output : ", createCont.ID)
-
-	out, err := apiClient.ContainerStart(context.Background(), createCont.ID, client.ContainerStartOptions{})
+	// start the container
+	_, err = apiClient.ContainerStart(ctx, createCont.ID, client.ContainerStartOptions{})
 	if err != nil {
 		fmt.Println("Error starting container: ", err)
-	} else {
-		fmt.Println("Container started successfully", out)
 	}
 
 	// Wait for the command to finish
-	waitCh := apiClient.ContainerWait(context.Background(), createCont.ID, client.ContainerWaitOptions{
+	waitCh := apiClient.ContainerWait(ctx, createCont.ID, client.ContainerWaitOptions{
 		Condition: container.WaitConditionNotRunning,
 	})
 	select {
@@ -68,7 +67,7 @@ func Run_in_container(imageName string, imgpath string) {
 	case <-waitCh.Result:
 	}
 
-	log, err := apiClient.ContainerLogs(context.Background(), createCont.ID, client.ContainerLogsOptions{
+	log, err := apiClient.ContainerLogs(ctx, createCont.ID, client.ContainerLogsOptions{
 		ShowStdout: true,
 		ShowStderr: true,
 	})
@@ -78,6 +77,6 @@ func Run_in_container(imageName string, imgpath string) {
 	out1, _ := io.ReadAll(log)
 	fmt.Print("out1 : ", string(out1))
 
-	_, err = apiClient.ContainerRemove(context.Background(), createCont.ID, client.ContainerRemoveOptions{})
+	_, err = apiClient.ContainerRemove(ctx, createCont.ID, client.ContainerRemoveOptions{})
 	errorCheck(err)
 }
