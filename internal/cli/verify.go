@@ -6,15 +6,18 @@ import (
 )
 
 var verifycmd = &cobra.Command{
-	Use: "verify",
-
+	Use:  "verify [command]",
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		imageName := args[0]
-		command := args[1]
-		analyzer.Run_in_container(imageName, command)
+		imgpath, _ := cmd.Flags().GetString("path")
+
+		analyzer.Run_in_container(imageName, imgpath)
 	},
 }
 
 func init() {
 	imageCmd.AddCommand(verifycmd)
+	verifycmd.Flags().StringP("path", "p", "", "Command to run in container")
+
 }
