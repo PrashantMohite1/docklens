@@ -7,6 +7,8 @@ import (
 	"log"
 	"time"
 
+	"strings"
+
 	"github.com/moby/moby/api/types/container"
 	"github.com/moby/moby/client"
 )
@@ -17,7 +19,7 @@ func errorCheck(err error) {
 	}
 }
 
-func Run_in_container(imageName string, imgpath string) {
+func Run_in_container(imageName string, imgpath string) ([]byte, error) {
 	// Create a new client that handles common environment variables
 	// for configuration (DOCKER_HOST, DOCKER_API_VERSION), and does
 	// API-version negotiation to allow downgrading the API version
@@ -73,10 +75,11 @@ func Run_in_container(imageName string, imgpath string) {
 	})
 
 	errorCheck(err)
-
-	out1, _ := io.ReadAll(log)
-	fmt.Print("out1 : ", string(out1))
+	containerhash, _ := io.ReadAll(log)
+	extractedHash := strings.Fields(string(containerhash))[0]
+	fmt.Println("containerhash : ", extractedHash)
 
 	_, err = apiClient.ContainerRemove(ctx, createCont.ID, client.ContainerRemoveOptions{})
 	errorCheck(err)
+	return []byte(extractedHash), nil
 }
