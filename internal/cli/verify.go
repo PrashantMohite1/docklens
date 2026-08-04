@@ -10,16 +10,14 @@ var verifycmd = &cobra.Command{
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		imageName := args[0]
-		imgpath, _ := cmd.Flags().GetString("path")
-		localpath, _ := cmd.Flags().GetString("localpath")
+		file, _ := cmd.Flags().GetString("file")
 
-		analyzer.Verify_file_sha256_in_container(imageName, localpath, imgpath)
+		analyzer.Verify_file_sha256_in_container(imageName, file)
 	},
 }
 
 func init() {
 	imageCmd.AddCommand(verifycmd)
-	verifycmd.Flags().StringP("path", "p", "", "Command to run in container")
-	verifycmd.Flags().StringP("localpath", "l", "", "Path to local file for SHA256 hash")
+	verifycmd.Flags().StringP("file", "f", "", "Path to file for SHA256 hash verification")
 
 }

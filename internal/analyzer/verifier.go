@@ -7,7 +7,20 @@ import (
 	"time"
 )
 
-func Verify_file_sha256_in_container(imageName string, filePath string, imagepath string) {
+func Verify_file_sha256_in_container(imageName string, file string) {
+
+	pairs := strings.Split(file, ",")
+
+	for _, pair := range pairs {
+		spl2 := strings.Split(pair, ":")
+		localpath := spl2[0]
+		imgpath := spl2[1]
+		Verify_ech_file_sha256_in_container(imageName, localpath, imgpath)
+	}
+
+}
+
+func Verify_ech_file_sha256_in_container(imageName string, filePath string, imagepath string) {
 
 	start := time.Now()
 	localhash := Get_local_files_sha256(filePath)
@@ -28,4 +41,5 @@ func Verify_file_sha256_in_container(imageName string, filePath string, imagepat
 
 	elapsed := time.Since(start)
 	fmt.Printf("Verification took %s\n", elapsed)
+
 }
