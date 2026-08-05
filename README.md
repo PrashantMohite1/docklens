@@ -72,3 +72,10 @@ docklens/
 └── go.sum                                         # Records dependency checksums for reproducible builds.
 
 ```
+
+
+### check-multiple files 
+
+```
+go run .\cmd\docklens\main.go image verify alpine-multifiles -f .\docs\test-files\first-file.txt:first-file.txt,.\docs\test-files\second-file.txt:second-file.txt,.\docs\test-files\third-file.txt:third-file.txt
+```
