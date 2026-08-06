@@ -19,15 +19,13 @@ func errorCheck(err error) {
 	}
 }
 
-func Run_in_container(imageName string, imgpath string) ([]byte, error) {
+func Run_in_container(imageName string, imgpath string, cmd []string) ([]byte, error) {
 	// Create a new client that handles common environment variables
 	// for configuration (DOCKER_HOST, DOCKER_API_VERSION), and does
 	// API-version negotiation to allow downgrading the API version
 	// when connecting with an older daemon version.
 	apiClient, err := client.New(client.FromEnv)
 	errorCheck(err)
-
-	cmd := []string{"/bin/sh", "-c", "sha256sum " + imgpath}
 
 	cfg := &container.Config{
 		Image:        imageName,

@@ -12,12 +12,22 @@ var verifycmd = &cobra.Command{
 		imageName := args[0]
 		file, _ := cmd.Flags().GetString("file")
 
-		analyzer.Verify_file_sha256_in_container(imageName, file)
+		dir, _ := cmd.Flags().GetString("dir")
+
+		if file != "" {
+			analyzer.Verify_file_sha256_in_container(imageName, file)
+		}
+
+		if dir != "" {
+			analyzer.Verify_dir_in_container(imageName, dir)
+		}
+
 	},
 }
 
 func init() {
 	imageCmd.AddCommand(verifycmd)
 	verifycmd.Flags().StringP("file", "f", "", "Path to file for SHA256 hash verification")
+	verifycmd.Flags().StringP("dir", "d", "", "Directory patch local : container ")
 
 }
