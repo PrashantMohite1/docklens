@@ -75,7 +75,7 @@ func Run_in_container(imageName string, imgpath string, cmd []string) ([]byte, e
 	errorCheck(err)
 	containerhash, _ := io.ReadAll(log)
 	extractedHash := strings.Fields(string(containerhash))[0]
-	fmt.Println("containerhash : ", extractedHash)
+	fmt.Println("containerhash : ", strings.Fields(string(containerhash)))
 
 	_, err = apiClient.ContainerRemove(ctx, createCont.ID, client.ContainerRemoveOptions{})
 	errorCheck(err)

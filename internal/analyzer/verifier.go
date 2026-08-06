@@ -16,7 +16,7 @@ func Verify_dir_in_container(imgname string, dirpath string) {
 	}
 	localdir := dirpath[:idx]
 	imagedir := dirpath[idx+1:]
-	fmt.Printf("local dir : %s  image dir : %s", localdir, imagedir)
+	fmt.Printf("local dir : %s  image dir : %s \n", localdir, imagedir)
 
 	cmd := []string{
 		"/bin/sh",
@@ -31,8 +31,8 @@ func Verify_dir_in_container(imgname string, dirpath string) {
 		fmt.Println(err)
 	}
 
-	fmt.Printf("Local dir hash : %x", localdir_hash)
-	fmt.Printf("Container dir hash : %x", containerdir_hash)
+	fmt.Printf("Local dir hash : %x \n", localdir_hash)
+	fmt.Printf("Container dir hash : %x \n", containerdir_hash)
 
 }
 
