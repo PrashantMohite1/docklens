@@ -2,7 +2,6 @@ package analyzer
 
 import (
 	"crypto/sha256"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -20,8 +19,6 @@ func Get_local_files_sha256(localfilepath string) []byte {
 	if _, err := io.Copy(hash, file); err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Printf("SHA256 hash of %s: %x\n", localfilepath, hash.Sum(nil))
 
 	return hash.Sum(nil)
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 )
 
 func Verify_dir_in_container(imgname string, dirpath string) {
@@ -49,18 +48,28 @@ func Verify_file_sha256_in_container(imageName string, file string) {
 
 	pairs := strings.Split(file, ",")
 
+	// for _, pair := range pairs {
+	// 	fmt.Println(pair)
+	// }
+
 	for _, pair := range pairs {
-		spl2 := strings.Split(pair, ":")
-		localpath := spl2[0]
-		imgpath := spl2[1]
-		Verify_ech_file_sha256_in_container(imageName, localpath, imgpath)
+		idx := strings.LastIndex(pair, ":")
+		if idx == -1 {
+			fmt.Println("invalid dir mapping")
+			return
+		}
+		localpath := pair[:idx]
+		imagepath := pair[idx+1:]
+
+		// fmt.Printf("Local path : %s \n\n Image path : %s \n", localpath, imagepath)
+
+		Verify_ech_file_sha256_in_container(imageName, localpath, imagepath)
 	}
 
 }
 
 func Verify_ech_file_sha256_in_container(imageName string, filePath string, imagepath string) {
 
-	start := time.Now()
 	localhash := Get_local_files_sha256(filePath)
 
 	cmd := []string{"/bin/sh", "-c", "sha256sum " + imagepath}
@@ -78,8 +87,5 @@ func Verify_ech_file_sha256_in_container(imageName string, filePath string, imag
 	} else {
 		fmt.Printf("%s : SHA256 hashes do not match!\n", filePath)
 	}
-
-	elapsed := time.Since(start)
-	fmt.Printf("Verification took %s\n", elapsed)
 
 }
