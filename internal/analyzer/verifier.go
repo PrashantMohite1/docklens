@@ -31,8 +31,17 @@ func Verify_dir_in_container(imgname string, dirpath string) {
 		fmt.Println(err)
 	}
 
-	fmt.Printf("Local dir hash : %x \n", localdir_hash)
-	fmt.Printf("Container dir hash : %x \n", containerdir_hash)
+	localHex := fmt.Sprintf("%x", localdir_hash)
+	containerHex := strings.TrimSpace(string(containerdir_hash))
+
+	fmt.Printf("Local dir hash : %s\n", localHex)
+	fmt.Printf("Container dir hash : %s\n", containerHex)
+
+	if localHex == containerHex {
+		fmt.Println("Directory hashes match!")
+	} else {
+		fmt.Println("Directory hashes do not match!")
+	}
 
 }
 
