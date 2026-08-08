@@ -4,7 +4,7 @@ DockLens is a Docker image inspection and verification utility written in Go. It
 
 This repository is intentionally structured as an open-source project. The project already includes a project license and source layout, and the README now provides a route for new contributors and users to build, run, and verify the CLI tooling.
 
-## Project status
+## Overview
 
 DockLens is available under the license in the repository root. Anyone can clone, use, study, fork, and modify this project according to the terms described in the license.
 
@@ -16,7 +16,7 @@ Before running the CLI, make sure the following are available:
 - Docker Engine available on the host
 - Access to Docker images that can be inspected or started as verification targets
 
-## Quick start
+## Quick Start
 
 Build the CLI:
 
@@ -36,8 +36,7 @@ You can also run the built binary directly:
 ./docklens image analyze nginx
 ```
 
-
-### File check quick guide
+### File Check Quick Guide
 
 For quick setup, you can build an Alpine-style verification image from the repository docs folder:
 
@@ -64,9 +63,7 @@ The command calculates a SHA-256 digest for the local file and runs `sha256sum` 
 
 
 
-### Directory check quick guide
-
-## Verify a directory inside a container
+### Directory Check Quick Guide
 
 The verify command also accepts a directory mapping through the `-d` flag. This performs a deterministic recursive file hash over the local directory and receives the image directory hash through a container command.
 
@@ -91,7 +88,7 @@ go run ./cmd/docklens image verify alpine:latest -d ./docs/test-files:/app/test-
 
 The implementation reads the local directory recursively, hashes each file, sorts the hashes, creates a directory manifest, and compares the generated digest against the result from `sha256sum` inside the container.
 
-## Open-source contribution flow
+## Open-Source Contribution Flow
 
 If you want to contribute:
 
@@ -103,7 +100,7 @@ If you want to contribute:
 
 The repository already keeps the source in the Go module and under the `internal` package layout for implementation details. `cmd` contains the CLI entry point.
 
-## Repository layout
+## Repository Layout
 
 ```text
 docklens/
