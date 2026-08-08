@@ -2,7 +2,7 @@ package analyzer
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"strings"
 )
 
@@ -14,12 +14,12 @@ func Verify_dir_in_container(imgname string, dirpath string) {
 
 		idx := strings.LastIndex(directory, ":")
 		if idx == -1 {
-			fmt.Println("invalid dir mapping")
+			slog.Error("invalid dir mapping", "directory", directory)
 			return
 		}
 		localdir := directory[:idx]
 		imagedir := directory[idx+1:]
-		fmt.Printf("local dir : %s  image dir : %s \n", localdir, imagedir)
+		slog.Info("Directory mapping", "local_dir", localdir, "image_dir", imagedir)
 
 		cmd := []string{
 			"/bin/sh",
@@ -31,16 +31,16 @@ func Verify_dir_in_container(imgname string, dirpath string) {
 
 		containerdir_hash, err := Run_in_container(imgname, imagedir, cmd)
 		if err != nil {
-			fmt.Println(err)
+			slog.Error("Error while running cmd in container", "error", err)
 		}
 
 		localHex := fmt.Sprintf("%x", localdir_hash)
 		containerHex := strings.TrimSpace(string(containerdir_hash))
 
 		if localHex == containerHex {
-			fmt.Println("Directory hashes match!")
+			slog.Info("Directory hashes match!")
 		} else {
-			fmt.Println("Directory hashes do not match!")
+			slog.Info("Directory hashes do not match!")
 		}
 
 	}
@@ -50,21 +50,14 @@ func Verify_file_sha256_in_container(imageName string, file string) {
 
 	pairs := strings.Split(file, ",")
 
-	// for _, pair := range pairs {
-	// 	fmt.Println(pair)
-	// }
-
 	for _, pair := range pairs {
 		idx := strings.LastIndex(pair, ":")
 		if idx == -1 {
-			fmt.Println("invalid dir mapping")
+			slog.Error("invalid file mapping", "filemap", pair)
 			return
 		}
 		localpath := pair[:idx]
 		imagepath := pair[idx+1:]
-
-		// fmt.Printf("Local path : %s \n\n Image path : %s \n", localpath, imagepath)
-
 		Verify_ech_file_sha256_in_container(imageName, localpath, imagepath)
 	}
 
@@ -78,16 +71,16 @@ func Verify_ech_file_sha256_in_container(imageName string, filePath string, imag
 
 	containerhash, err := Run_in_container(imageName, imagepath, cmd)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Error while running command in container", err)
 	}
 
 	localHex := fmt.Sprintf("%x", localhash)
 	containerHex := strings.TrimSpace(string(containerhash))
 
 	if localHex == containerHex {
-		fmt.Printf("%s : SHA256 hashes match!\n", filePath)
+		slog.Info("SHA256 hashes match", "file", filePath)
 	} else {
-		fmt.Printf("%s : SHA256 hashes do not match!\n", filePath)
+		slog.Error("SHA256 hashes do not match", "file", filePath)
 	}
 
 }
