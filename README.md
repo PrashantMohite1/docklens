@@ -1,81 +1,116 @@
-# dockerlens
+# DockLens
 
+DockLens is a Docker image inspection and verification utility written in Go. It currently exposes image-level analysis commands and a verification workflow that compares local files or directories against paths inside a container image.
+
+This repository is intentionally structured as an open-source project. The project already includes a project license and source layout, and the README now provides a route for new contributors and users to build, run, and verify the CLI tooling.
+
+## Project status
+
+DockLens is available under the license in the repository root. Anyone can clone, use, study, fork, and modify this project according to the terms described in the license.
+
+## Prerequisites
+
+Before running the CLI, make sure the following are available:
+
+- Go 1.22 or later
+- Docker Engine available on the host
+- Access to Docker images that can be inspected or started as verification targets
+
+## Quick start
+
+Build the CLI:
+
+```bash
+go build ./cmd/docklens
 ```
-go run ./cmd/docklens image analyze nginx  
+
+Analyze an image:
+
+```bash
+go run ./cmd/docklens image analyze nginx
+```
+
+You can also run the built binary directly:
+
+```bash
+./docklens image analyze nginx
 ```
 
 
+### File check quick guide
+
+For quick setup, you can build an Alpine-style verification image from the repository docs folder:
+
+```bash
+cd ./docs/
+docker build -t <image-name> .
 ```
+
+A file check is useful when you want to confirm that a single file or a small group of files in your workspace matches the same SHA-256 content inside a container image.
+
+Format:
+
+```bash
+docklens image verify <image-name> -f <local-filepath>:<image-filepath>,<local-filepath>:<image-filepath>
+```
+
+Example:
+
+```bash
+go run ./cmd/docklens image verify alpine:latest -f ./docs/test-files/first-file.txt:/first-file.txt
+```
+
+The command calculates a SHA-256 digest for the local file and runs `sha256sum` inside the container image to compare the digest values.
+
+
+
+### Directory check quick guide
+
+## Verify a directory inside a container
+
+The verify command also accepts a directory mapping through the `-d` flag. This performs a deterministic recursive file hash over the local directory and receives the image directory hash through a container command.
+
+Format:
+
+```bash
+docklens image verify <image-name> -d <local-directory>:<image-directory>
+```
+
+Example:
+
+```bash
+go run ./cmd/docklens image verify alpine:latest -d ./docs/test-files:/app/test-files
+```
+
+Multiple directory mappings can be supplied in one call by separating each mapping with a comma:
+
+```bash
+go run ./cmd/docklens image verify alpine:latest -d ./docs/test-files:/app/test-files,./docs/test-files/temp:/app/temp
+```
+
+
+The implementation reads the local directory recursively, hashes each file, sorts the hashes, creates a directory manifest, and compares the generated digest against the result from `sha256sum` inside the container.
+
+## Open-source contribution flow
+
+If you want to contribute:
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Make your changes.
+4. Run available tests or compile checks.
+5. Open a pull request with a short explanation of the problem and fix.
+
+The repository already keeps the source in the Go module and under the `internal` package layout for implementation details. `cmd` contains the CLI entry point.
+
+## Repository layout
+
+```text
 docklens/
-│
-├── cmd/                                           # Contains executable binaries for this repository.
-│   └── docklens/
-│       └── main.go                                # Starts the CLI application and wires all commands together.
-│
-├── internal/                                      # Private application packages used only inside DockLens.
-│   │
-│   ├── cli/                                       # Defines all CLI commands and flags.
-│   │   ├── root.go                                # Registers the root `docklens` command.
-│   │   ├── image.go                               # Registers all `docklens image` subcommands.
-│   │   ├── container.go                           # Registers all `docklens container` subcommands.
-│   │   ├── network.go                             # Registers all `docklens network` subcommands.
-│   │   ├── volume.go                              # Registers all `docklens volume` subcommands.
-│   │   └── system.go                              # Registers all `docklens system` subcommands.
-│   │
-│   ├── docker/                                    # Communicates with the Docker Engine API.
-│   │   ├── client.go                              # Creates and manages the Docker SDK client.
-│   │   ├── image.go                               # Retrieves image information from Docker.
-│   │   ├── container.go                           # Retrieves container information from Docker.
-│   │   ├── network.go                             # Retrieves network information from Docker.
-│   │   ├── volume.go                              # Retrieves volume information from Docker.
-│   │   └── system.go                              # Retrieves Docker daemon and system information.
-│   │
-│   ├── image/                                     # Implements image-related business logic.
-│   │   ├── analyze.go                             # Performs overall image inspection and analysis.
-│   │   ├── layers.go                              # Analyzes image layers and their sizes.
-│   │   ├── diff.go                                # Compares two Docker images.
-│   │   └── score.go                               # Evaluates image quality using best-practice rules.
-│   │
-│   ├── container/                                 # Implements container-related business logic.
-│   │   ├── analyze.go                             # Performs overall container inspection.
-│   │   ├── network.go                             # Analyzes container networking configuration.
-│   │   ├── mounts.go                              # Inspects mounted volumes and bind mounts.
-│   │   ├── resources.go                           # Analyzes CPU, memory, and resource usage.
-│   │   └── processes.go                           # Lists and analyzes running processes.
-│   │
-│   ├── network/                                   # Implements Docker network analysis.
-│   │   ├── analyze.go                             # Inspects Docker network configuration.
-│   │   └── topology.go                            # Maps container-to-network relationships.
-│   │
-│   ├── volume/                                    # Implements Docker volume analysis.
-│   │   ├── analyze.go                             # Inspects Docker volume configuration.
-│   │   └── usage.go                               # Reports disk usage and utilization.
-│   │
-│   ├── output/                                    # Formats analysis results for users.
-│   │   ├── table.go                               # Renders human-readable terminal tables.
-│   │   ├── json.go                                # Renders machine-readable JSON output.
-│   │   └── yaml.go                                # Renders YAML output.
-│   │
-│   └── common/                                    # Shared internal utilities used across packages.
-│       ├── errors.go                              # Defines reusable application error types.
-│       └── format.go                              # Provides common formatting helper functions.
-│
-├── docs/                                          # Project documentation, architecture, and design notes.
-├── hack/                                          # Build, test, lint, and development automation scripts.
-├── test/                                          # Integration and end-to-end test suites.
-├── .github/workflows/                             # GitHub Actions CI/CD workflows.
-├── Makefile                                       # Standard build, test, and development commands.
-├── Dockerfile                                     # Builds the DockLens container image.
-├── README.md                                      # Project overview, installation, and usage guide.
-├── LICENSE                                        # Open-source license for the project.
-├── go.mod                                         # Defines the Go module and project dependencies.
-└── go.sum                                         # Records dependency checksums for reproducible builds.
-
-```
-
-
-### check-multiple files 
-
-```
-go run .\cmd\docklens\main.go image verify alpine-multifiles -f .\docs\test-files\first-file.txt:first-file.txt,.\docs\test-files\second-file.txt:second-file.txt,.\docs\test-files\third-file.txt:third-file.txt
+├── cmd/                  # CLI command entry points
+├── internal/             # Analyzer, CLI, Docker, and verification logic
+├── docs/                 # Additional project documentation and examples
+├── LICENSE               # Open-source project license
+├── README.md             # User and contributor introduction
+└── go.mod                # Go module definition
 ```
