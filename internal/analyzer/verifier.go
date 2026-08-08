@@ -8,40 +8,42 @@ import (
 
 func Verify_dir_in_container(imgname string, dirpath string) {
 
-	idx := strings.LastIndex(dirpath, ":")
-	if idx == -1 {
-		fmt.Println("invalid dir mapping")
-		return
+	multi_dirpaths := strings.Split(dirpath, ",")
+
+	for _, directory := range multi_dirpaths {
+
+		idx := strings.LastIndex(directory, ":")
+		if idx == -1 {
+			fmt.Println("invalid dir mapping")
+			return
+		}
+		localdir := directory[:idx]
+		imagedir := directory[idx+1:]
+		fmt.Printf("local dir : %s  image dir : %s \n", localdir, imagedir)
+
+		cmd := []string{
+			"/bin/sh",
+			"-c",
+			"find " + imagedir + " -type f -exec sha256sum {} + | awk '{print $1}' | sort | sha256sum",
+		}
+
+		localdir_hash := Checkdir_hash(localdir)
+
+		containerdir_hash, err := Run_in_container(imgname, imagedir, cmd)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		localHex := fmt.Sprintf("%x", localdir_hash)
+		containerHex := strings.TrimSpace(string(containerdir_hash))
+
+		if localHex == containerHex {
+			fmt.Println("Directory hashes match!")
+		} else {
+			fmt.Println("Directory hashes do not match!")
+		}
+
 	}
-	localdir := dirpath[:idx]
-	imagedir := dirpath[idx+1:]
-	fmt.Printf("local dir : %s  image dir : %s \n", localdir, imagedir)
-
-	cmd := []string{
-		"/bin/sh",
-		"-c",
-		"find " + imagedir + " -type f -exec sha256sum {} + | awk '{print $1}' | sort | sha256sum",
-	}
-
-	localdir_hash := Checkdir_hash(localdir)
-
-	containerdir_hash, err := Run_in_container(imgname, imagedir, cmd)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	localHex := fmt.Sprintf("%x", localdir_hash)
-	containerHex := strings.TrimSpace(string(containerdir_hash))
-
-	fmt.Printf("Local dir hash : %s\n", localHex)
-	fmt.Printf("Container dir hash : %s\n", containerHex)
-
-	if localHex == containerHex {
-		fmt.Println("Directory hashes match!")
-	} else {
-		fmt.Println("Directory hashes do not match!")
-	}
-
 }
 
 func Verify_file_sha256_in_container(imageName string, file string) {
