@@ -4,13 +4,24 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
+
+	"github.com/PrashantMohite1/docklens/internal/logger"
 )
 
+// func report_generate() {
+
+// }
+
 func Verify_dir_in_container(imgname string, dirpath string) {
+
+	checked := 0
+	Matched := 0
+	MisMatched := 0
 
 	multi_dirpaths := strings.Split(dirpath, ",")
 
 	for _, directory := range multi_dirpaths {
+		checked += 1
 
 		idx := strings.LastIndex(directory, ":")
 		if idx == -1 {
@@ -19,7 +30,7 @@ func Verify_dir_in_container(imgname string, dirpath string) {
 		}
 		localdir := directory[:idx]
 		imagedir := directory[idx+1:]
-		slog.Info("Directory mapping", "local_dir", localdir, "image_dir", imagedir)
+		slog.Info("Comparing " + localdir + " with " + imagedir)
 
 		cmd := []string{
 			"/bin/sh",
@@ -39,11 +50,15 @@ func Verify_dir_in_container(imgname string, dirpath string) {
 
 		if localHex == containerHex {
 			slog.Info("Directory hashes match!")
+			Matched += 1
 		} else {
 			slog.Info("Directory hashes do not match!")
+			MisMatched += 1
 		}
 
 	}
+
+	logger.Generate_report(checked, Matched, MisMatched)
 }
 
 func Verify_file_sha256_in_container(imageName string, file string) {

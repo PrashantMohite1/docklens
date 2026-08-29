@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"log/slog"
+
 	"github.com/PrashantMohite1/docklens/internal/analyzer"
 	"github.com/spf13/cobra"
 )
@@ -13,6 +15,8 @@ var verifycmd = &cobra.Command{
 		file, _ := cmd.Flags().GetString("file")
 
 		dir, _ := cmd.Flags().GetString("dir")
+
+		slog.Info("\nVerifying Image : " + imageName + "\n")
 
 		if file != "" {
 			analyzer.Verify_file_sha256_in_container(imageName, file)
