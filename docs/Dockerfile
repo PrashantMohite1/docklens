@@ -1,6 +1,6 @@
 FROM alpine 
 
-workdir /app
+WORKDIR /app
 
 COPY ./ /app/
 

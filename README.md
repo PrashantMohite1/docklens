@@ -82,7 +82,7 @@ go run ./cmd/docklens image verify alpine:latest -d ./docs/test-files:/app/test-
 Multiple directory mappings can be supplied in one call by separating each mapping with a comma:
 
 ```bash
-go run ./cmd/docklens image verify alpine:latest -d ./docs/test-files:/app/test-files,./docs/test-files/temp:/app/temp
+go run ./cmd/docklens image verify alpine:latest -d ./docs/test-files:/app/test-files,./docs/test-files/temp:/app/test-files/temp
 ```
 
 
