@@ -21,20 +21,13 @@ Before running the CLI, make sure the following are available:
 Build the CLI:
 
 ```bash
-go build ./cmd/docklens
+# OS : Linux 
+GOOS=linux GOARCH=amd64 go build -o docklens ./cmd/docklens
+
+# OS: windows 
+GOOS=windows GOARCH=amd64 go build -o docklens.exe ./cmd/docklens
 ```
 
-Analyze an image:
-
-```bash
-go run ./cmd/docklens image analyze nginx
-```
-
-You can also run the built binary directly:
-
-```bash
-./docklens image analyze nginx
-```
 
 ### File Check Quick Guide
 
