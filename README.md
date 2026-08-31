@@ -49,7 +49,7 @@ docklens image verify <image-name> -f <local-filepath>:<image-filepath>,<local-f
 Example:
 
 ```bash
-go run ./cmd/docklens image verify alpine:latest -f ./docs/test-files/first-file.txt:/first-file.txt
+go run ./cmd/docklens image verify <image-name> -f ./docs/test-files/first-file.txt:/first-file.txt
 ```
 
 The command calculates a SHA-256 digest for the local file and runs `sha256sum` inside the container image to compare the digest values.
@@ -69,13 +69,13 @@ docklens image verify <image-name> -d <local-directory>:<image-directory>
 Example:
 
 ```bash
-go run ./cmd/docklens image verify alpine:latest -d ./docs/test-files:/app/test-files
+go run ./cmd/docklens image verify <image-name> -d ./docs/test-files:/app/test-files
 ```
 
 Multiple directory mappings can be supplied in one call by separating each mapping with a comma:
 
 ```bash
-go run ./cmd/docklens image verify alpine:latest -d ./docs/test-files:/app/test-files,./docs/test-files/temp:/app/test-files/temp
+go run ./cmd/docklens image verify <image-name> -d ./docs/test-files:/app/test-files,./docs/test-files/temp:/app/test-files/temp
 ```
 
 
