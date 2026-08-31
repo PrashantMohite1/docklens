@@ -35,7 +35,7 @@ For quick setup, you can build an Alpine-style verification image from the repos
 
 ```bash
 cd ./docs/
-docker build -t <image-name> .
+docker build -t test-img .
 ```
 
 A file check is useful when you want to confirm that a single file or a small group of files in your workspace matches the same SHA-256 content inside a container image.
@@ -43,13 +43,20 @@ A file check is useful when you want to confirm that a single file or a small gr
 Format:
 
 ```bash
-docklens image verify <image-name> -f <local-filepath>:<image-filepath>,<local-filepath>:<image-filepath>
+docklens image verify test-img -f <local-filepath>:<image-filepath>,<local-filepath>:<image-filepath>
 ```
 
 Example:
 
 ```bash
-go run ./cmd/docklens image verify <image-name> -f ./docs/test-files/first-file.txt:/first-file.txt
+go run ./cmd/docklens image verify test-img -f ./docs/test-files/first-file.txt:/app/test-files/first-file.txt
+
+```
+
+Multiple File mappings can be supplied in one call by separating each mapping with a comma:
+
+```
+go run ./cmd/docklens image verify test-img -f ./docs/test-files/first-file.txt:/app/test-files/first-file.txt,./docs/test-files/third-file.txt:/app/test-files/third-file.txt
 ```
 
 The command calculates a SHA-256 digest for the local file and runs `sha256sum` inside the container image to compare the digest values.
@@ -63,19 +70,19 @@ The verify command also accepts a directory mapping through the `-d` flag. This 
 Format:
 
 ```bash
-docklens image verify <image-name> -d <local-directory>:<image-directory>
+docklens image verify test-img -d <local-directory>:<image-directory>
 ```
 
 Example:
 
 ```bash
-go run ./cmd/docklens image verify <image-name> -d ./docs/test-files:/app/test-files
+go run ./cmd/docklens image verify test-img -d ./docs/test-files:/app/test-files
 ```
 
 Multiple directory mappings can be supplied in one call by separating each mapping with a comma:
 
 ```bash
-go run ./cmd/docklens image verify <image-name> -d ./docs/test-files:/app/test-files,./docs/test-files/temp:/app/test-files/temp
+go run ./cmd/docklens image verify test-img -d ./docs/test-files:/app/test-files,./docs/test-files/temp:/app/test-files/temp
 ```
 
 

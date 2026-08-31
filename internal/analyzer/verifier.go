@@ -12,16 +12,16 @@ import (
 
 // }
 
-func Verify_dir_in_container(imgname string, dirpath string) {
+var Checked = 0
+var Matched = 0
+var MisMatched = 0
 
-	checked := 0
-	Matched := 0
-	MisMatched := 0
+func Verify_dir_in_container(imgname string, dirpath string) {
 
 	multi_dirpaths := strings.Split(dirpath, ",")
 
 	for _, directory := range multi_dirpaths {
-		checked += 1
+		Checked += 1
 
 		idx := strings.LastIndex(directory, ":")
 		if idx == -1 {
@@ -58,7 +58,7 @@ func Verify_dir_in_container(imgname string, dirpath string) {
 
 	}
 
-	logger.Generate_report(checked, Matched, MisMatched)
+	logger.Generate_report(Checked, Matched, MisMatched)
 }
 
 func Verify_file_sha256_in_container(imageName string, file string) {
@@ -73,12 +73,17 @@ func Verify_file_sha256_in_container(imageName string, file string) {
 		}
 		localpath := pair[:idx]
 		imagepath := pair[idx+1:]
+		Checked += 1
 		Verify_ech_file_sha256_in_container(imageName, localpath, imagepath)
 	}
+
+	logger.Generate_report(Checked, Matched, MisMatched)
 
 }
 
 func Verify_ech_file_sha256_in_container(imageName string, filePath string, imagepath string) {
+
+	slog.Info("Comaparing" + filePath + " with " + imagepath)
 
 	localhash := Get_local_files_sha256(filePath)
 
@@ -93,9 +98,11 @@ func Verify_ech_file_sha256_in_container(imageName string, filePath string, imag
 	containerHex := strings.TrimSpace(string(containerhash))
 
 	if localHex == containerHex {
-		slog.Info("SHA256 hashes match", "file", filePath)
+		slog.Info("File hashes match!", "file", filePath)
+		Matched += 1
 	} else {
-		slog.Error("SHA256 hashes do not match", "file", filePath)
+		slog.Error("File hashes do not match", "file", filePath)
+		MisMatched += 1
 	}
 
 }
