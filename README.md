@@ -34,8 +34,7 @@ GOOS=windows GOARCH=amd64 go build -o docklens.exe ./cmd/docklens
 For quick setup, you can build an Alpine-style verification image from the repository docs folder:
 
 ```bash
-cd ./docs/
-docker build -t test-img .
+docker build -t test-img ./docs/
 ```
 
 A file check is useful when you want to confirm that a single file or a small group of files in your workspace matches the same SHA-256 content inside a container image.
@@ -55,7 +54,7 @@ go run ./cmd/docklens image verify test-img -f ./docs/test-files/first-file.txt:
 
 Multiple File mappings can be supplied in one call by separating each mapping with a comma:
 
-```
+```bash
 go run ./cmd/docklens image verify test-img -f ./docs/test-files/first-file.txt:/app/test-files/first-file.txt,./docs/test-files/third-file.txt:/app/test-files/third-file.txt
 ```
 
@@ -111,3 +110,7 @@ docklens/
 ├── README.md             # User and contributor introduction
 └── go.mod                # Go module definition
 ```
+
+
+
+
